@@ -21,7 +21,6 @@ namespace chainGrid::components{
         }
         glm::vec2 topLeft = chainGrid::convertToScreenCoords(glm::vec2(this->transform->getPos())*this->transform->getScale());
         glm::vec2 bottomRight = chainGrid::convertToScreenCoords((glm::vec2(this->transform->getPos())*this->transform->getScale())+(glm::vec2(this->transform->getSize())*this->transform->getScale()));
-        // glm::mat4 mp = chainGrid::getMP(this->transform);
         glm::mat4 mp(1.0f);
         switch(polyType){
             case rendering::RenderType::Primitive: {
