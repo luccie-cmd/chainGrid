@@ -1,0 +1,7 @@
+*.txt
+test*
+__pycache__
+*.old
+bin
+documents
+.vscode
