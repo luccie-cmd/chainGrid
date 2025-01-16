@@ -43,7 +43,6 @@ void render(){
     for(chainGrid::ui::Element* element : uiElements){
         element->render();
     }
-    renderer->renderText(glm::vec2(0), glm::u8vec4(255), "Hello");
     renderer->endDraw();
 }
 
@@ -85,7 +84,7 @@ void titleScreenButtonHandler(){
 void loadTitleScreen(){
     entities.clear();
     uiElements.clear();
-    uiElements.push_back(new chainGrid::ui::Text(glm::u64vec2(100), "Test text", renderer));
+    uiElements.push_back(new chainGrid::ui::Text(glm::u64vec2((chainGrid::getScreenCoords().x/2)-(chainGrid::getScreenCoords().x/9), 100), "Chaingrid", renderer));
     renderType = RenderType::TitleScreen;
 }
 

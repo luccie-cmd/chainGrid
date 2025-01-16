@@ -1,11 +1,11 @@
 #version 450 core
 
-layout (location = 0) in vec2 aPos; // <vec2 pos, vec2 tex>
-layout (location = 1) in vec2 aTexCoords;
+layout (location = 0) in vec4 aPosUV; // <vec2 pos, vec2 tex>
 
 out vec2 TexCoords;
+uniform mat4 proj;
 
 void main(){
-    gl_Position = vec4(aPos, 0.0, 1.0);
-    TexCoords = aTexCoords;
+    gl_Position = proj * vec4(aPosUV.xy, 0, 1);
+    TexCoords = aPosUV.zw;
 }

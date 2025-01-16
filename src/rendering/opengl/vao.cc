@@ -22,6 +22,7 @@ namespace chainGrid::rendering{
         glBindVertexArray(0);
     }
     void Vao::setAttr(GLuint index, GLint size, GLenum type, GLsizei stride, const void *pointer){
+        glEnableVertexAttribArray(index);
         switch (type) {
             case GL_BYTE:
             case GL_UNSIGNED_BYTE:
@@ -37,7 +38,6 @@ namespace chainGrid::rendering{
                 glVertexAttribPointer(index, size, type, GL_FALSE, stride, pointer);
                 break;
         }
-        glEnableVertexAttribArray(index);
     }
 };
 

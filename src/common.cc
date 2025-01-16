@@ -15,11 +15,23 @@ namespace chainGrid{
         ret.y = 1.0f - ((float)coords.y / (float)screenSize.y) * 2.0f;
         return ret;
     }
+    glm::vec2 convertToScreenCoords(glm::u32vec2 coords){
+        return convertToScreenCoords(glm::u64vec2(coords));
+    }
+    glm::vec2 convertToScreenCoords(glm::u16vec2 coords){
+        return convertToScreenCoords(glm::u32vec2(coords));
+    }
+    glm::vec2 convertToScreenCoords(glm::u8vec2 coords){
+        return convertToScreenCoords(glm::u16vec2(coords));
+    }
     glm::vec2 convertToScreenCoords(glm::vec2 coords){
         glm::vec2 ret;
         ret.x = ((float)coords.x / (float)screenSize.x) * 2.0f - 1.0f;
         ret.y = 1.0f - ((float)coords.y / (float)screenSize.y) * 2.0f;
         return ret;
+    }
+    glm::u16vec2 getScreenCoords(){
+        return screenSize;
     }
     glm::mat4 getMP(components::Transform* transform){
         glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(convertToScreenCoords(transform->getPos()*glm::u64vec2(transform->getSize())), 0.0f));

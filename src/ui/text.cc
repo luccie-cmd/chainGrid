@@ -8,7 +8,6 @@ namespace chainGrid::ui{
     }
     Text::~Text(){}
     void Text::render(){
-        this->__renderer->renderText(convertToScreenCoords(this->_pos), glm::u8vec4(255), this->_text);
-        // this->__renderer->renderQuad(glm::vec2(convertToScreenCoords(this->_pos)), glm::vec2(convertToScreenCoords(this->_pos+(this->_text.size()*10))), glm::mat4(1), glm::u8vec4(255));
+        this->__renderer->renderText(this->_pos, glm::u8vec4(255), this->_text);
     }
 };

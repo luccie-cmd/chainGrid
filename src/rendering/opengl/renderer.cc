@@ -4,6 +4,8 @@
 #include <rendering/opengl/vao.h>
 #include <rendering/opengl/vbo.h>
 #include <rendering/opengl/error.h>
+#include <common.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace chainGrid::rendering{
     OpenGLRenderer::OpenGLRenderer(){
@@ -14,18 +16,17 @@ namespace chainGrid::rendering{
     }
     OpenGLRenderer::~OpenGLRenderer(){}
     Character* OpenGLRenderer::loadChar(FT_Face face){
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         GLuint texture;
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
-            GL_R8,
+            GL_RED,
             face->glyph->bitmap.width,
             face->glyph->bitmap.rows,
             0,
-            GL_ALPHA,
+            GL_RED,
             GL_UNSIGNED_BYTE,
             face->glyph->bitmap.buffer
         );
@@ -39,6 +40,7 @@ namespace chainGrid::rendering{
         character->size = glm::u64vec2(face->glyph->bitmap.width, face->glyph->bitmap.rows);
         character->bearing = glm::u64vec2(face->glyph->bitmap_left, face->glyph->bitmap_top);
         character->advance = face->glyph->advance.x;
+        glBindTexture(GL_TEXTURE_2D, 0);
         return character;
     }
     static void debugCallbackFunction(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam){
@@ -61,6 +63,7 @@ namespace chainGrid::rendering{
         glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         this->loadCharacters();
     }
     void OpenGLRenderer::shutDown(){}
@@ -110,25 +113,27 @@ namespace chainGrid::rendering{
             this->vaos.at((std::size_t)RenderType::Text) = new Vao;
         }
         Vao* vao = this->vaos.at((std::size_t)RenderType::Text);
-        vao->bind();
         Vbo* vbo = new Vbo(GL_ARRAY_BUFFER, GL_FALSE);
+        vao->bind();
         vbo->bind();
         vbo->setBuffer(nullptr, sizeof(GLfloat)*6*4);
-        vao->setAttr(0, 2, GL_FLOAT, 4 * sizeof(GLfloat), nullptr);
-        vao->setAttr(1, 2, GL_FLOAT, 4 * sizeof(GLfloat), reinterpret_cast<void*>(2*sizeof(GLfloat)));
+        vao->setAttr(0, 4, GL_FLOAT, 4 * sizeof(GLfloat), nullptr);
         vbo->unbind();
+        vao->unbind();
         shader->bind();
-        glActiveTexture(GL_TEXTURE0);   
-        shader->uniform("text", glm::i32vec1(0));
         glm::vec4 normalizedColor = glm::vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
         shader->uniform("textColor", normalizedColor);
+        shader->uniform("text", glm::i32vec1(0));
+        glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(getScreenCoords().x), 0.0f, static_cast<float>(getScreenCoords().y));
+        shader->uniform("proj", projection);
+        glActiveTexture(GL_TEXTURE0);
+        vao->bind();
         for(char c : text){
             Character *ch = this->characters[c];
             float xpos = pos.x + ch->bearing.x;
-            float ypos = pos.y - (ch->size.y - ch->bearing.y);
+            float ypos = (getScreenCoords().y - pos.y) - (ch->size.y - ch->bearing.y);
             float w = ch->size.x;
             float h = ch->size.y;
-
             GLfloat vertices[6][4] = {
                 {xpos,     ypos + h,   0.0f, 0.0f},
                 {xpos,     ypos,       0.0f, 1.0f},
@@ -138,16 +143,15 @@ namespace chainGrid::rendering{
                 {xpos + w, ypos + h,   1.0f, 0.0f} 
             };
             glBindTexture(GL_TEXTURE_2D, ch->textureID);
-            vao->bind();
             vbo->bind();
             vbo->setSubBuffer(0, sizeof(vertices), vertices);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
             vbo->unbind();
-            vao->unbind();
-            pos.x += ch->advance >> 6;
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            pos.x += (ch->advance >> 6);
         }
         glBindTexture(GL_TEXTURE_2D, 0);
         delete vbo;
+        vao->unbind();
         shader->unbind(); 
     }
 };

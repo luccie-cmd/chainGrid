@@ -16,7 +16,7 @@ namespace chainGrid::rendering{
             std::exit(1);
         }
         FT_Set_Pixel_Sizes(face, 0, 48);
-        for(uint8_t c = 0; c < 127; ++c){
+        for(uint8_t c = 32; c < 127; ++c){
             if(FT_Load_Char(face, c, FT_LOAD_RENDER)){
                 std::printf("ERROR: Failed to load character `%c`\n", (char)c);
             }
