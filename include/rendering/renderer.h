@@ -34,8 +34,8 @@ namespace chainGrid::rendering{
             virtual void shutDown() = 0;
             virtual void beginDraw() = 0;
             virtual void endDraw() = 0;
-            virtual void renderQuad(glm::vec2 topLeft, glm::vec2 bottomRight, glm::mat4 mp, glm::u8vec4 color) = 0;
-            virtual void renderText(glm::vec2 topLeft, glm::u8vec4 color, std::string text) = 0;
+            virtual void renderQuad(glm::vec2 topLeft, glm::vec2 bottomRight, glm::u8vec4 color) = 0;
+            virtual void renderText(glm::u64vec2 topLeft, glm::u8vec4 color, std::string text) = 0;
         protected:
             virtual Character* loadChar(FT_Face face) = 0;
             void loadCharacters();

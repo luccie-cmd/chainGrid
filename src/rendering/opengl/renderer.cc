@@ -74,13 +74,13 @@ namespace chainGrid::rendering{
     void OpenGLRenderer::endDraw(){
         glfwSwapBuffers(this->__window);
     }
-    void OpenGLRenderer::renderQuad(glm::vec2 topLeft, glm::vec2 bottomRight, glm::mat4 mp, glm::u8vec4 color){
+    void OpenGLRenderer::renderQuad(glm::vec2 topLeft, glm::vec2 bottomRight, glm::u8vec4 color){
         if(this->shaders.at((std::size_t)RenderType::Primitive) == nullptr){
             this->shaders.at((std::size_t)RenderType::Primitive) = new Shader(RenderType::Primitive);
         }
         Shader* shader = this->shaders.at((std::size_t)RenderType::Primitive);
         shader->bind();
-        GLfloat vertices[] = {
+        GLfloat vertices[4][6] = {
             topLeft.x,     topLeft.y,     (color.r/255.0f), (color.g/255.0f), (color.b/255.0f), (color.a/255.0f),
             topLeft.x,     bottomRight.y, (color.r/255.0f), (color.g/255.0f), (color.b/255.0f), (color.a/255.0f),
             bottomRight.x, topLeft.y,     (color.r/255.0f), (color.g/255.0f), (color.b/255.0f), (color.a/255.0f),
@@ -93,17 +93,16 @@ namespace chainGrid::rendering{
         vao->bind();
         Vbo* vbo = new Vbo(GL_ARRAY_BUFFER, GL_TRUE);
         vbo->bind();
-        vbo->setBuffer(static_cast<void*>(vertices), sizeof(vertices));
+        vbo->setBuffer(vertices, sizeof(vertices));
         vao->setAttr(0, 2, GL_FLOAT, 6*sizeof(GLfloat), nullptr);
         vao->setAttr(1, 4, GL_FLOAT, 6*sizeof(GLfloat), reinterpret_cast<void*>(2*sizeof(GLfloat)));
-        shader->uniform("mp", mp);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         vbo->unbind();
         vao->unbind();
         shader->unbind();
         delete vbo;
     }
-    void OpenGLRenderer::renderText(glm::vec2 pos, glm::u8vec4 color, std::string text){
+    void OpenGLRenderer::renderText(glm::u64vec2 pos, glm::u8vec4 color, std::string text){
         (void)color;
         if(this->shaders.at((std::size_t)RenderType::Text) == nullptr){
             this->shaders.at((std::size_t)RenderType::Text) = new Shader(RenderType::Text);

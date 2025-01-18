@@ -10,11 +10,11 @@
 #define GRID_LINE_SIZE  2
 
 namespace chainGrid{
-    glm::vec2 convertToScreenCoords(glm::u8vec2 coords);
-    glm::vec2 convertToScreenCoords(glm::u16vec2 coords);
-    glm::vec2 convertToScreenCoords(glm::u32vec2 coords);
-    glm::vec2 convertToScreenCoords(glm::u64vec2 coords);
-    glm::vec2 convertToScreenCoords(glm::vec2 coords);
+    glm::vec2 normalizeCoordinates(glm::u8vec2 coords);
+    glm::vec2 normalizeCoordinates(glm::u16vec2 coords);
+    glm::vec2 normalizeCoordinates(glm::u32vec2 coords);
+    glm::vec2 normalizeCoordinates(glm::u64vec2 coords);
+    glm::vec2 normalizeCoordinates(glm::vec2 coords);
     glm::u64vec2 convertFromGridToScreen(glm::u64vec2 coords);
     void setScreenSize(glm::u16vec2 screenSize);
     glm::u16vec2 getScreenCoords();

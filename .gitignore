@@ -1,7 +1,8 @@
-*.txt
-test*
-__pycache__
 *.old
+*.pdf
+test*
+*.log
+*.txt
+__pycache__
 bin
-documents
 .vscode

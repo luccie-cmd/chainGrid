@@ -10,9 +10,10 @@ namespace chainGrid::entities{
             ~Player();
             void update(std::vector<Entity*> _entities) override;
         private:
-            void handleInput(std::vector<Entity*> _entities);
-            bool collidesWith(std::vector<Entity*> _entities);
-            glm::u64vec2 newPos;
+            void handleInput();
+            void onNoCollision();
+            void onCollision(Entity* entity);
+            glm::u64vec2 newPos, oldPos;
     };
 };
 

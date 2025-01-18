@@ -6,10 +6,9 @@
 #include <components/drawable.h>
 
 namespace chainGrid::entities{
-    Entity::Entity(EntityType type, glm::u64vec2 initPos, GLFWwindow* window, rendering::Renderer* renderer, bool hasColission){
+    Entity::Entity(EntityType type, glm::u64vec2 initPos, GLFWwindow* window, rendering::Renderer* renderer){
         this->__window = window;
         this->__renderer = renderer;
-        this->__hasColission = hasColission;
         this->__type = type;
         this->__components.clear();
         this->addComponent(new components::Transform(convertFromGridToScreen(initPos), glm::u16vec2(0), glm::vec2(1), glm::u16vec2(GRID_BLOCK_SIZE)));
@@ -18,6 +17,9 @@ namespace chainGrid::entities{
         for(components::Component* component : this->__components){
             delete component;
         }
+    }
+    EntityType Entity::getType(){
+        return this->__type;
     }
     void Entity::addComponent(components::Component* component){
         for(components::Component* comp : this->__components){
@@ -37,8 +39,13 @@ namespace chainGrid::entities{
         std::printf("ERROR: Expected component type %u to be present\n", (unsigned int)type);
         std::exit(1);
     }
-    bool Entity::hasColission(){
-        return this->__hasColission;
+    bool Entity::hasComponent(components::ComponentType type){
+        for(components::Component* comp : this->__components){
+            if(comp->getComponentType() == type){
+                return true;
+            }
+        }
+        return false;
     }
     void Entity::draw(){
         for(components::Component* component : this->__components){

@@ -11,7 +11,6 @@ namespace chainGrid::components{
         public:
             Drawable(glm::u8vec4 color, rendering::RenderType polyType);
             ~Drawable();
-            void update();
             void draw(rendering::Renderer* renderer);
             void linkTransform(Transform* transform);
             Transform* getTransform();

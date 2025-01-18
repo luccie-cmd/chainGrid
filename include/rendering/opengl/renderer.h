@@ -14,8 +14,8 @@ namespace chainGrid::rendering{
             void shutDown() override;
             void beginDraw() override;
             void endDraw() override;
-            void renderQuad(glm::vec2 topLeft, glm::vec2 bottomRight, glm::mat4 mp, glm::u8vec4 color) override;
-            void renderText(glm::vec2 topLeft, glm::u8vec4 color, std::string text) override;
+            void renderQuad(glm::vec2 topLeft, glm::vec2 bottomRight, glm::u8vec4 color) override;
+            void renderText(glm::u64vec2 topLeft, glm::u8vec4 color, std::string text) override;
         private:
             Character* loadChar(FT_Face face) override;
             std::array<Shader*, (std::size_t)(RenderType::None)> shaders;

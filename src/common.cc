@@ -9,32 +9,23 @@ namespace chainGrid{
     void setScreenSize(glm::u16vec2 size){
         screenSize = size;
     }
-    glm::vec2 convertToScreenCoords(glm::u64vec2 coords){
-        glm::vec2 ret;
-        ret.x = ((float)coords.x / (float)screenSize.x) * 2.0f - 1.0f;
-        ret.y = 1.0f - ((float)coords.y / (float)screenSize.y) * 2.0f;
-        return ret;
-    }
-    glm::vec2 convertToScreenCoords(glm::u32vec2 coords){
-        return convertToScreenCoords(glm::u64vec2(coords));
-    }
-    glm::vec2 convertToScreenCoords(glm::u16vec2 coords){
-        return convertToScreenCoords(glm::u32vec2(coords));
-    }
-    glm::vec2 convertToScreenCoords(glm::u8vec2 coords){
-        return convertToScreenCoords(glm::u16vec2(coords));
-    }
-    glm::vec2 convertToScreenCoords(glm::vec2 coords){
-        glm::vec2 ret;
-        ret.x = ((float)coords.x / (float)screenSize.x) * 2.0f - 1.0f;
-        ret.y = 1.0f - ((float)coords.y / (float)screenSize.y) * 2.0f;
-        return ret;
-    }
     glm::u16vec2 getScreenCoords(){
         return screenSize;
     }
+    glm::vec2 normalizeCoordinates(glm::vec2 coords){
+        glm::vec2 ret;
+        ret.x = ((float)coords.x / (float)screenSize.x) * 2.0f - 1.0f;
+        ret.y = 1.0f - ((float)coords.y / (float)screenSize.y) * 2.0f;
+        return ret;
+    }
+    glm::vec2 normalizeCoordinates(glm::u64vec2 coords){
+        glm::vec2 ret;
+        ret.x = ((float)coords.x / (float)screenSize.x) * 2.0f - 1.0f;
+        ret.y = 1.0f - ((float)coords.y / (float)screenSize.y) * 2.0f;
+        return ret;
+    }
     glm::mat4 getMP(components::Transform* transform){
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(convertToScreenCoords(transform->getPos()*glm::u64vec2(transform->getSize())), 0.0f));
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(normalizeCoordinates(transform->getPos()*glm::u64vec2(transform->getSize())), 0.0f));
         model = glm::rotate(model, glm::radians((float)transform->getRotation().x), glm::vec3(0.0f, 0.0f, 1.0f));
         model = glm::scale(model, glm::vec3(transform->getScale().x, transform->getScale().y, 1.0f));
         glm::mat4 projection = glm::ortho(0.0f, (float)screenSize.x, (float)screenSize.y, 0.0f, -1.0f, 1.0f);

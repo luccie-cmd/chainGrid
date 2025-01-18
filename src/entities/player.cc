@@ -1,19 +1,23 @@
 #include <entities/player.h>
 #include <components/drawable.h>
+#include <components/collision2d.h>
 #include <common.h>
 
 namespace chainGrid::entities{
-    Player::Player(glm::u64vec2 initPos, GLFWwindow* window, rendering::Renderer* renderer) :Entity(EntityType::Player, initPos, window, renderer, true){
+    Player::Player(glm::u64vec2 initPos, GLFWwindow* window, rendering::Renderer* renderer) :Entity(EntityType::Player, initPos, window, renderer){
+        components::Transform* transform = reinterpret_cast<components::Transform*>(this->getComponent(components::ComponentType::Transform));
         components::Drawable* drawable = new components::Drawable(glm::u8vec4(255), rendering::RenderType::Primitive);
-        for(components::Component* component : this->__components){
-            if(component->getComponentType() == components::ComponentType::Transform){
-                drawable->linkTransform(reinterpret_cast<components::Transform*>(component));
-            }
-        }
+        drawable->linkTransform(transform);
         this->addComponent(drawable);
+        components::Collision2D* collision = new components::Collision2D();
+        collision->linkTransform(transform);
+        collision->addOnNoCollision([this]() { this->onNoCollision(); });
+        collision->addOnCollision([this](Entity* entity) { this->onCollision(entity); });
+        collision->addIgnoredType(EntityType::Player);
+        this->addComponent(collision);
     }
     Player::~Player(){}
-    void Player::handleInput(std::vector<Entity*> _entities){
+    void Player::handleInput(){
         static bool lastLeftState = false;
         static bool lastRightState = false;
         static bool lastUpState = false;
@@ -44,24 +48,21 @@ namespace chainGrid::entities{
         } else if(glfwGetKey(this->__window, GLFW_KEY_DOWN) == GLFW_RELEASE){
             lastDownState = false;
         }
-        if(!this->collidesWith(_entities)){
-            transform->setTmpPos(this->newPos);
-        }
+        this->oldPos = transform->getPos();
+        transform->setTmpPos(this->newPos);
     }
-    bool Player::collidesWith(std::vector<Entity*> _entities){
-        for(Entity* entity : _entities){
-            if(entity->hasColission()){
-                if(reinterpret_cast<components::Transform*>(entity->getComponent(components::ComponentType::Transform))->getPos() == this->newPos){
-                    return true;
-                }
-            }
+    void Player::onNoCollision(){}
+    void Player::onCollision(Entity* entity){
+        if(entity->getType() == EntityType::Wall){
+            components::Transform* transform = reinterpret_cast<components::Transform*>(this->getComponent(components::ComponentType::Transform));
+            transform->setTmpPos(this->oldPos);
+            transform->update({});
         }
-        return false;
     }
     void Player::update(std::vector<Entity*> _entities){
-        this->handleInput(_entities);
+        this->handleInput();
         for(components::Component* component : this->__components){
-            component->update();
+            component->update(_entities);
         }
     }
 };

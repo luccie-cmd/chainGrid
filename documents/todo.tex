@@ -1,0 +1,134 @@
+\documentclass{article}
+\usepackage{amssymb}
+\usepackage{ifthen}
+\usepackage{fontspec}
+\usepackage{hyperref}
+
+\setmainfont[SizeFeatures={Size=7}]{JetBrainsMonoNL-Regular}
+\newcommand{\todoitem}[2][notdone]{\noindent\ifthenelse{\equal{#1}{done}}{\noindent\textbf{\ensuremath{\checkmark}}}{\noindent\textbf{\ensuremath{\square}}}\hspace*{0.2em}\small#2\\}
+\newcommand{\subtodoitem}[2][notdone]{\noindent\ifthenelse{\equal{#1}{done}}{\hspace*{1em}\textbf{\ensuremath{\checkmark}}}{\hspace*{1em}\textbf{\ensuremath{\square}}}\hspace*{0.2em}\small#2\\}
+\newcommand{\subsubtodoitem}[2][notdone]{\noindent\ifthenelse{\equal{#1}{done}}{\hspace*{2em}\textbf{\ensuremath{\checkmark}}}{\hspace*{2em}\textbf{\ensuremath{\square}}}\hspace*{0.2em}\small#2\\}
+\newcommand{\subsubsubtodoitem}[2][notdone]{\noindent\ifthenelse{\equal{#1}{done}}{\hspace*{3em}\textbf{\ensuremath{\checkmark}}}{\hspace*{3em}\textbf{\ensuremath{\square}}}\hspace*{0.2em}\small#2\\}
+\newcommand{\subsubsubsubtodoitem}[2][notdone]{\noindent\ifthenelse{\equal{#1}{done}}{\hspace*{4em}\textbf{\ensuremath{\checkmark}}}{\hspace*{4em}\textbf{\ensuremath{\square}}}\hspace*{0.2em}\small#2\\}
+\newcommand{\subsubsubsubsubtodoitem}[2][notdone]{\noindent\ifthenelse{\equal{#1}{done}}{\hspace*{5em}\textbf{\ensuremath{\checkmark}}}{\hspace*{5em}\textbf{\ensuremath{\square}}}\hspace*{0.2em}\small#2\\}
+\newcommand{\explanation}[2]{\hspace*{\dimexpr#2em\relax} \small#1\\}
+
+\begin{document}
+
+\title{ChainGrid TODO list}
+\author{}
+\date{}
+
+% \section{ChainGrid TODO list}
+\todoitem{Chaingrid}
+    \subtodoitem[done]{Global initialization}
+    \subtodoitem{Rendering}
+        \subsubtodoitem{Vulkan}
+            \subsubsubtodoitem{TODO}
+                \explanation{Not doing vulkan graphics right now, so not needed.}{4}
+        \subsubtodoitem{OpenGL}
+            \subsubsubtodoitem[done]{Initialization}
+                \subsubsubsubtodoitem[done]{Make context}
+                    \explanation{Making an OpenGL context is essential, without it no OpenGL function calls can or will be executed}{5}
+                \subsubsubsubtodoitem[done]{Enable flags}
+                    \subsubsubsubsubtodoitem[done]{Enable culling}
+                    \subsubsubsubsubtodoitem[done]{Enable blending}
+                        \explanation{Culling is used for not rendering things not visible.}{6}
+                        \explanation{Blending is essential for text and texture rendering.}{6}
+            \subsubsubtodoitem[done]{Begin rendering}
+                \subsubsubsubtodoitem[done]{Clear color}
+                \subsubsubsubtodoitem[done]{Clear color buffer bit and depth buffer bit}
+                    \explanation{We clear the first color to get it in the color stencil, the depth stencil isn't needed in 2D but still handy.}{5}
+                    \explanation{After that we clear the color and depth buffer bits which send the colors and depths to the screen.}{5}
+            \subsubsubtodoitem[done]{End rendering}
+                \subsubsubsubtodoitem[done]{GLFW swap buffers}
+                    \explanation{GLFW handles the screen for us which also means that it should handle the swapping of buffers for us.}{5}
+            \subsubsubtodoitem{Texture rendering}
+                % \subsubsubsubtodoitem{TODO}
+            \subsubsubtodoitem[done]{Text rendering}
+                % \subsubsubsubtodoitem{TODO}
+            \subsubsubtodoitem[done]{Quad rendering}
+                \subsubsubsubtodoitem[done]{Shader}
+                \subsubsubsubtodoitem[done]{Normalized Coordinates}
+                \subsubsubsubtodoitem[done]{VAO}
+                \subsubsubsubtodoitem[done]{VBO}
+            \subsubsubtodoitem[done]{Shaders}
+                \subsubsubsubtodoitem[done]{Uniforms}
+                    \subsubsubsubsubtodoitem[done]{Matrices}
+                    \subsubsubsubsubtodoitem[done]{Vectors}
+                    \subsubsubsubsubtodoitem[done]{Sampler2D}
+                \subsubsubsubtodoitem[done]{Layout}
+                    \subsubsubsubsubtodoitem[done]{Vectors}
+            \subsubsubtodoitem[done]{Vao}
+                \subsubsubsubtodoitem[done]{Generate}
+                \subsubsubsubtodoitem[done]{Destroy}
+                \subsubsubsubtodoitem[done]{Bind}
+                    \explanation{Binding is necessary with every OpenGL Object, without it no data is sent to the GPU}{5}
+                \subsubsubsubtodoitem[done]{Unbind}
+                \subsubsubsubtodoitem[done]{Set attribute(s)}
+            \subsubsubtodoitem[done]{Vbo}
+                \subsubsubsubtodoitem[done]{Generate}
+                    \explanation{Every Vertex Buffer Object (VBO) needs to be generated every drawing call.}{5}
+                    \explanation{This is because every call the data passed in is different.}{5}
+                \subsubsubsubtodoitem[done]{Destroy}
+                    \explanation{We need to destroy every Vertex Buffer Object (VBO) because otherwise we would just be wastig GPU recources.}{5}
+                \subsubsubsubtodoitem[done]{Bind}
+                    \explanation{Binding is necessary with every OpenGL Object, without it no data is sent to the GPU}{5}
+                \subsubsubsubtodoitem[done]{Unbind}
+                    \explanation{Unbinding is necessary with every OpenGL Object, otherwise we would use data we don't expect.}{5}
+                \subsubsubsubtodoitem[done]{Set buffer(s)}
+                    \explanation{Without being able to set a buffer, we still don't get anything rendering to the screen or sent to the GPU.}{5}
+                \subsubsubsubtodoitem[done]{Set sub buffer(s)}
+                    \explanation{While sub buffer(s) aren't needed in every OpenGL application, it's still nice to have.}{5}
+                    \explanation{This is mainly only needed for text rendering where we update the VBO a lot but the size doesn't change}{5}
+    \\
+    \subtodoitem{Entities}
+        \subsubtodoitem[done]{Player}
+            \subsubsubtodoitem[done]{Movement}
+                \subsubsubsubtodoitem[done]{Input handling}
+                \subsubsubsubtodoitem[done]{New transform}
+            \subsubsubtodoitem[done]{Components}
+                \subsubsubsubtodoitem[done]{Collision2D}
+                \subsubsubsubtodoitem[done]{Transform}
+                \subsubsubsubtodoitem[done]{Drawable}
+        \subsubtodoitem[done]{Wall}
+            \subsubsubtodoitem[done]{Components}
+                \subsubsubsubtodoitem[done]{Collision2D}
+                \subsubsubsubtodoitem[done]{Transform}
+                \subsubsubsubtodoitem[done]{Drawable}
+        \subsubtodoitem{Start}
+            \subsubsubtodoitem{Components}
+                \subsubsubsubtodoitem{Collision2D}
+                \subsubsubsubtodoitem{Transform}
+                \subsubsubsubtodoitem{Drawable}
+        \subsubtodoitem{Finish}
+            \subsubsubtodoitem{Components}
+                \subsubsubsubtodoitem{Collision2D}
+                \subsubsubsubtodoitem{Transform}
+                \subsubsubsubtodoitem{Drawable}
+    \\
+    \subtodoitem{UI}
+        \subsubtodoitem[done]{Text}
+            \subsubsubtodoitem[done]{Rendering}
+                \subsubsubsubtodoitem[done]{Text rendering}
+        \subsubtodoitem{Button}
+            \subsubsubtodoitem{Rendering}
+                \subsubsubsubtodoitem{Texture rendering}
+                \subsubsubsubtodoitem{Quad rendering}
+            \subsubsubtodoitem{Interaction}
+    \\
+    \subtodoitem{Components}
+        \subsubtodoitem[done]{Collision2D}
+            \subsubsubtodoitem[done]{Check intersection with other Collision2D}
+            \subsubsubtodoitem[done]{On collision}
+            \subsubsubtodoitem[done]{On no collision}
+        \subsubtodoitem[done]{Transform}
+            \subsubsubtodoitem[done]{Pos}
+            \subsubsubtodoitem[done]{Size}
+            \subsubsubtodoitem[done]{Scale}
+            \subsubsubtodoitem[done]{Rotation}
+        \subsubtodoitem{Drawable}
+            \subsubsubtodoitem{Render texture}
+            \subsubsubtodoitem[done]{Render quad}
+
+\end{document}

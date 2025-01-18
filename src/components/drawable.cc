@@ -10,7 +10,6 @@ namespace chainGrid::components{
         this->polyType = polyType;
     }
     Drawable::~Drawable(){}
-    void Drawable::update(){}
     void Drawable::linkTransform(Transform* transform){
         this->transform = transform;
     }
@@ -19,12 +18,11 @@ namespace chainGrid::components{
             std::printf("ERROR: No transform linked\n");
             std::exit(1);
         }
-        glm::vec2 topLeft = chainGrid::convertToScreenCoords(glm::vec2(this->transform->getPos())*this->transform->getScale());
-        glm::vec2 bottomRight = chainGrid::convertToScreenCoords((glm::vec2(this->transform->getPos())*this->transform->getScale())+(glm::vec2(this->transform->getSize())*this->transform->getScale()));
-        glm::mat4 mp(1.0f);
+        glm::vec2 topLeft = glm::vec2(this->transform->getPos())*this->transform->getScale();
+        glm::vec2 bottomRight = (glm::vec2(this->transform->getPos())*this->transform->getScale())+(glm::vec2(this->transform->getSize())*this->transform->getScale());
         switch(polyType){
             case rendering::RenderType::Primitive: {
-                renderer->renderQuad(topLeft, bottomRight, mp, this->color);
+                renderer->renderQuad(normalizeCoordinates(topLeft), normalizeCoordinates(bottomRight), this->color);
             } break;
             case rendering::RenderType::None:
             default: {

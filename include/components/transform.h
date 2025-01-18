@@ -16,7 +16,7 @@ namespace chainGrid::components{
             glm::u16vec2 getRotation();
             glm::vec2 getScale();
             glm::u16vec2 getSize();
-            void update();
+            void update(std::vector<entities::Entity*> _entities) override;
         private:
             glm::u64vec2 tmpPos;
             glm::u16vec2 tmpRotation;

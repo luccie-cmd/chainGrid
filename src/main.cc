@@ -9,6 +9,8 @@
 #include <csignal>
 #include <execinfo.h>
 #include <rendering/opengl/renderer.h>
+#include <chrono>
+#include <iostream>
 
 uint64_t maxFps = 0;
 std::vector<chainGrid::entities::Entity*> entities;
@@ -30,7 +32,7 @@ void render(){
 #endif
         for(size_t y = 1; y < GRID_HEIGHT-2; ++y){
             for(size_t x = 1; x < GRID_WIDTH-2; ++x){
-                renderer->renderQuad(chainGrid::convertToScreenCoords(chainGrid::convertFromGridToScreen(glm::u64vec2(x, y))), chainGrid::convertToScreenCoords(chainGrid::convertFromGridToScreen(glm::u64vec2(x+1, y+1))), glm::mat4(1.0f), glm::u8vec4(50));
+                renderer->renderQuad(chainGrid::normalizeCoordinates(chainGrid::convertFromGridToScreen(glm::u64vec2(x, y))), chainGrid::normalizeCoordinates(chainGrid::convertFromGridToScreen(glm::u64vec2(x+1, y+1))), glm::u8vec4(50));
             }
         }
 #ifdef OPENGL_RENDERER
@@ -156,6 +158,7 @@ int main(){
         std::exit(1);
     }
     init();
+    std::printf("Max FPS: %lu\n", maxFps);
     float last_time = glfwGetTime();
     float accumulated_time = 0.0f;
     const float FRAME_TIME = 1/maxFps;
@@ -164,12 +167,12 @@ int main(){
         float dt = current_time - last_time;
         last_time = current_time;
         accumulated_time += dt;
-        glfwPollEvents();
         if (accumulated_time >= FRAME_TIME){
             accumulated_time = 0.0f;
             update();
             render();
         }
+        glfwPollEvents();
     }
     renderer->shutDown();
     commonExit();

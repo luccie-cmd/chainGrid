@@ -8,7 +8,8 @@
 #include <rendering/types.h>
 #include <rendering/renderer.h>
 
-namespace chainGrid::entities{
+namespace chainGrid{
+namespace entities{
     enum struct EntityType{
         Player,
         Wall,
@@ -16,8 +17,8 @@ namespace chainGrid::entities{
     };
     class Entity{
         public:
-            Entity(EntityType type, glm::u64vec2 initPos, GLFWwindow* window, rendering::Renderer* renderer, bool hasCollision);
-            virtual ~Entity() = 0;
+            Entity(EntityType type, glm::u64vec2 initPos, GLFWwindow* window, rendering::Renderer* renderer);
+            virtual ~Entity();
             virtual void update(std::vector<Entity*> _entities){
                 (void)_entities;
             }
@@ -26,16 +27,15 @@ namespace chainGrid::entities{
             void addComponent(components::ComponentType component);
             void removeComponent(components::ComponentType type);
             bool hasComponent(components::ComponentType type);
-            bool hasColission();
             components::Component* getComponent(components::ComponentType type);
             EntityType getType();
         protected:
-            bool __hasColission;
             EntityType __type;
             GLFWwindow* __window;
             std::vector<components::Component*> __components;
             rendering::Renderer* __renderer;
     };
+};
 };
 
 #endif // _CHAINGRID_ENTITIES_ENTITY_H_

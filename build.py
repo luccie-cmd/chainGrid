@@ -79,7 +79,7 @@ if OLD_CONFIG != CONFIG:
     print("Configuration changed, rebuilding...")
 CONFIG["CFLAGS"] = ['-c', '-DCOMPILE', '-DGL_GLEXT_PROTOTYPES', '-DGLM_ENABLE_EXPERIMENTAL']
 CONFIG["CFLAGS"] += ['-Wall', '-Wextra', '-Werror']
-CONFIG["CFLAGS"] += ['-finline-functions', '-ffast-math', '-funroll-loops', '-fomit-frame-pointer', '-fstrict-aliasing']
+CONFIG["CFLAGS"] += ['-finline-functions', '-ffast-math', '-funroll-loops', '-fomit-frame-pointer', '-fstrict-aliasing', '-fmax-errors=1']
 CONFIG["CFLAGS"] += ['-march=native', '-mtune=native', '-mavx', '-mavx2', '-mfma']
 CONFIG["CXXFLAGS"] = ['-fno-rtti']
 CONFIG["ASFLAGS"] = ['-felf64']
@@ -281,13 +281,50 @@ def getInfo():
     callCmd(f"cloc . --exclude-dir=limine,bin >> info.txt")
     callCmd(f"tree -I 'bin' -I 'script' -I '.vscode' -I 'tmp.txt' -I 'commands.txt' -I 'info.txt' >> info.txt")
 
+def createPDF():
+    os.chdir("documents")
+    if callCmd("xelatex -interaction=batchmode todo.tex")[0] == 1:
+        print("ERROR: Creating of document `todo` failed")
+        callCmd("rm -rf *.txt")
+        callCmd("rm -rf *.aux")
+        callCmd("rm -rf *.out")
+        exit(1)
+    if callCmd("xelatex -interaction=batchmode gdd.tex")[0] == 1:
+        print("ERROR: Creating of document `gdd` failed")
+        callCmd("rm -rf *.txt")
+        callCmd("rm -rf *.aux")
+        callCmd("rm -rf *.out")
+        exit(1)
+    if callCmd("xelatex -interaction=batchmode todo.tex")[0] == 1:
+        print("ERROR: Creating of document `todo` failed")
+        callCmd("rm -rf *.txt")
+        callCmd("rm -rf *.aux")
+        callCmd("rm -rf *.out")
+        exit(1)
+    if callCmd("xelatex -interaction=batchmode gdd.tex")[0] == 1:
+        print("ERROR: Creating of document `gdd` failed")
+        callCmd("rm -rf *.txt")
+        callCmd("rm -rf *.aux")
+        callCmd("rm -rf *.out")
+        exit(1)
+    callCmd("rm -rf *.aux")
+    callCmd("rm -rf *.log")
+    callCmd("rm -rf *.out")
+    callCmd("rm -rf *.txt")
+    os.chdir("..")
+
 def main():
     basename = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
     if "clean" in sys.argv:
         callCmd(f"rm -rf /tmp/{basename}")
         callCmd(f"rm -rf {CONFIG['outDir'][0]}")
+        global force_rebuild
+        force_rebuild = True
     if force_rebuild:
         print("Rebuilding...")
+    if "pdf" in sys.argv:
+        print("> creating PDFS")
+        createPDF()
     print("> Creating necesarry dirs")
     callCmd(f"mkdir -p {CONFIG['outDir'][0]}")
     print("> Building src")

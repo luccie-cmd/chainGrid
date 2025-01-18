@@ -27,7 +27,8 @@ namespace chainGrid::components{
     void Transform::setTmpPos(glm::u64vec2 newPos){
         this->tmpPos = newPos;
     }
-    void Transform::update(){
+    void Transform::update(std::vector<entities::Entity*> entities){
+        (void)entities;
         this->pos = this->tmpPos;
         this->rotation = this->tmpRotation;
         this->scale = this->tmpScale;
