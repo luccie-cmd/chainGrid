@@ -108,7 +108,7 @@ void init(){
 #endif
     if(renderer == nullptr){
         commonExit();
-        std::printf("ERROR: No rendering backend\n");
+        std::printf("ERROR: No or invalid rendering backend\n");
         std::exit(1);
     }
     renderer->init(window);
