@@ -121,9 +121,7 @@ else:
 def callCmd(command, print_out=False):
     with open("commands.txt", "a") as f:
         f.write(command+'\n')
-    result = subprocess.run(command, capture_output=not print_out, text=True, shell=True)
-    if result.returncode != 0:
-        print(result.stderr)
+    result = subprocess.run(command, capture_output=not print_out, text=True, shell=True, stderr=None)
     return [result.returncode, result.stdout]
 
 callCmd("rm -rf commands.txt")
@@ -313,7 +311,36 @@ def createPDF():
     callCmd("rm -rf *.txt")
     os.chdir("..")
 
+def checkDeps():
+    neededDeps = []
+    if callCmd("cat /usr/bin/g++ > /dev/null")[0] == 1 or callCmd("cat /usr/bin/cpp > /dev/null")[0] == 1:
+        print("g++, cpp needed")
+        neededDeps.append("gcc")
+    if callCmd("cat /usr/bin/ld > /dev/null")[0] == 1:
+        print("ld needed")
+    if callCmd("cat /usr/bin/objdump > /dev/null")[0] == 1:
+        print("objdump needed")
+    if callCmd("cat /usr/bin/cloc > /dev/null")[0] == 1:
+        print("cloc needed")
+    if callCmd("cat /usr/bin/tree > /dev/null")[0] == 1:
+        print("tree needed")
+    if callCmd("cat /usr/lib/libglfw.so > /dev/null")[0] == 1:
+        print("glfw needed")
+    if callCmd("cat /usr/lib/libvulkan.so > /dev/null")[0] == 1:
+        print("vulkan needed")
+    if callCmd("cat /usr/lib/libfreetype.so > /dev/null")[0] == 1:
+        print("freetype needed")
+    if callCmd("cat /usr/lib/libGL.so > /dev/null")[0] == 1:
+        print("mesa needed")
+
+    # TODO: Distro specific
+    command = "sudo pacman -Syu"
+    for dep in neededDeps:
+        command += f" {dep}"
+    callCmd(command, True)
+
 def main():
+    checkDeps()
     basename = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
     if "clean" in sys.argv:
         callCmd(f"rm -rf /tmp/{basename}")
