@@ -276,8 +276,8 @@ def buildDir(directory, out_file="", static_lib: bool=False):
 def getInfo():
     callCmd("rm -f info.txt")
     callCmd("touch info.txt")
-    callCmd(f"cloc . --exclude-dir=limine,bin >> info.txt")
-    callCmd(f"tree -I 'bin' -I 'script' -I '.vscode' -I 'tmp.txt' -I 'commands.txt' -I 'info.txt' >> info.txt")
+    callCmd(f"cloc . --exclude-dir=limine,bin,documents,script --exclude-ext=pdf,tex,txt,spv >> info.txt")
+    callCmd(f"tree -I 'bin' -I 'script' -I '.vscode' -I '*.txt' >> info.txt")
 
 def createPDF():
     os.chdir("documents")
