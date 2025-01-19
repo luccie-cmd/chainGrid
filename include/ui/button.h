@@ -3,12 +3,14 @@
 #include "element.h"
 #include <cstdarg>
 #include <functional>
+#include <typeindex>
+#include <any>
 
 namespace chainGrid::ui{
-    using buttonClickProto = std::function<void(std::va_list)>;
+    using buttonClickProto = std::function<void(std::vector<std::any>)>;
     class Button : public Element{
         public:
-            Button(glm::u64vec2 pos, glm::u16vec2 size, glm::u8vec4 color, glm::u8vec4 textColor, std::string text, rendering::Renderer* renderer, buttonClickProto buttonClick, ...);
+            Button(glm::u64vec2 pos, glm::u16vec2 size, glm::u8vec4 color, glm::u8vec4 textColor, std::string text, rendering::Renderer* renderer, std::vector<std::type_index> types, buttonClickProto buttonClick, ...);
             ~Button();
             void render() override;
             void update(GLFWwindow* window) override;
@@ -19,7 +21,8 @@ namespace chainGrid::ui{
             glm::u8vec4 color;
             glm::u8vec4 textColor;
             std::string text;
-            std::va_list onClickArgs;
+            std::vector<std::type_index> types;
+            std::vector<std::any> onClickArgs;
     };
 };
 

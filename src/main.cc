@@ -19,6 +19,7 @@ std::vector<chainGrid::ui::Element*> uiElements;
 GLFWwindow* window = nullptr;
 toml::v3::ex::parse_result config;
 chainGrid::rendering::Renderer* renderer;
+uint64_t currentLevel = -1;
 enum struct RenderType{
     TitleScreen,
     LevelSelect,
@@ -69,7 +70,8 @@ void fillBorderWalls(){
     }
 }
 
-void loadLevel(unsigned int level){
+void loadLevel(uint64_t level){
+    currentLevel = level;
     entities.clear();
     uiElements.clear();
     fillBorderWalls();
@@ -78,10 +80,16 @@ void loadLevel(unsigned int level){
     renderType = RenderType::Level;
 }
 
-void titleScreenButtonHandler(va_list args){
+void loadLevelButtonHandler(std::vector<std::any> args){
+    loadLevel(std::any_cast<uint64_t>(args.at(0)));
+}
+
+void titleScreenButtonHandler(std::vector<std::any> args){
     (void)args;
     entities.clear();
     uiElements.clear();
+    uiElements.push_back(new chainGrid::ui::Text(glm::u64vec2((chainGrid::getScreenCoords().x/2)-(chainGrid::getScreenCoords().x/9), 100), "Level select", renderer));
+    uiElements.push_back(new chainGrid::ui::Button(glm::u64vec2((chainGrid::getScreenCoords().x/2)-100, chainGrid::getScreenCoords().y/2), glm::u16vec2(200, 50), glm::u8vec4(80), glm::u8vec4(255), "1", renderer, {typeid(uint64_t)}, loadLevelButtonHandler, (uint64_t)0));
     renderType = RenderType::LevelSelect;
 }
 
@@ -89,7 +97,7 @@ void loadTitleScreen(){
     entities.clear();
     uiElements.clear();
     uiElements.push_back(new chainGrid::ui::Text(glm::u64vec2((chainGrid::getScreenCoords().x/2)-(chainGrid::getScreenCoords().x/9), 100), "Chaingrid", renderer));
-    uiElements.push_back(new chainGrid::ui::Button(glm::u64vec2((chainGrid::getScreenCoords().x/2)-100, chainGrid::getScreenCoords().y/2), glm::u16vec2(200, 50), glm::u8vec4(0), glm::u8vec4(0, 0, 0, 255), "Start", renderer, titleScreenButtonHandler));
+    uiElements.push_back(new chainGrid::ui::Button(glm::u64vec2((chainGrid::getScreenCoords().x/2)-100, chainGrid::getScreenCoords().y/2), glm::u16vec2(200, 50), glm::u8vec4(0), glm::u8vec4(0, 0, 0, 255), "Start", renderer, {}, titleScreenButtonHandler));
     renderType = RenderType::TitleScreen;
 }
 
@@ -115,8 +123,7 @@ void init(){
         std::exit(1);
     }
     renderer->init(window);
-    // loadTitleScreen();
-    loadLevel(0);
+    loadTitleScreen();
 }
 
 void quitHandler(int sig){

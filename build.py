@@ -81,7 +81,7 @@ CONFIG["CFLAGS"] = ['-c', '-DCOMPILE', '-DGL_GLEXT_PROTOTYPES', '-DGLM_ENABLE_EX
 CONFIG["CFLAGS"] += ['-Wall', '-Wextra', '-Werror']
 CONFIG["CFLAGS"] += ['-finline-functions', '-ffast-math', '-funroll-loops', '-fomit-frame-pointer', '-fstrict-aliasing', '-fmax-errors=1']
 CONFIG["CFLAGS"] += ['-march=native', '-mtune=native', '-mavx', '-mavx2', '-mfma']
-CONFIG["CXXFLAGS"] = ['-fno-rtti']
+CONFIG["CXXFLAGS"] = ['-frtti']
 CONFIG["ASFLAGS"] = ['-felf64']
 CONFIG["LDFLAGS"] = ['-lglfw', '-lm', '-ldl', '-lfreetype', '-Wl,--gc-sections', '-ffunction-sections', '-fdata-sections']
 CONFIG["INCPATHS"] = ['-Iinclude']
