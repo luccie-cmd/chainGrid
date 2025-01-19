@@ -5,12 +5,13 @@
 namespace chainGrid::ui{
     enum struct ElementType{
         Text,
+        Button,
         None,
     };
     class Element{
         public:
             Element(ElementType type, rendering::Renderer* renderer);
-            virtual ~Element() = 0;
+            virtual ~Element() = default;
             virtual void render() = 0;
             virtual void update(GLFWwindow* window){
                 (void)window;

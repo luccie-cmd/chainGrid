@@ -6,6 +6,7 @@
 #include <rendering/opengl/error.h>
 #include <common.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 namespace chainGrid::rendering{
     OpenGLRenderer::OpenGLRenderer(){
@@ -74,17 +75,19 @@ namespace chainGrid::rendering{
     void OpenGLRenderer::endDraw(){
         glfwSwapBuffers(this->__window);
     }
-    void OpenGLRenderer::renderQuad(glm::vec2 topLeft, glm::vec2 bottomRight, glm::u8vec4 color){
+    void OpenGLRenderer::renderQuad(glm::u64vec2 topLeft, glm::u64vec2 bottomRight, glm::u8vec4 color){
+        glm::vec2 normalTL = normalizeCoordinates(topLeft);
+        glm::vec2 normalBR = normalizeCoordinates(bottomRight);
         if(this->shaders.at((std::size_t)RenderType::Primitive) == nullptr){
             this->shaders.at((std::size_t)RenderType::Primitive) = new Shader(RenderType::Primitive);
         }
         Shader* shader = this->shaders.at((std::size_t)RenderType::Primitive);
         shader->bind();
         GLfloat vertices[4][6] = {
-            topLeft.x,     topLeft.y,     (color.r/255.0f), (color.g/255.0f), (color.b/255.0f), (color.a/255.0f),
-            topLeft.x,     bottomRight.y, (color.r/255.0f), (color.g/255.0f), (color.b/255.0f), (color.a/255.0f),
-            bottomRight.x, topLeft.y,     (color.r/255.0f), (color.g/255.0f), (color.b/255.0f), (color.a/255.0f),
-            bottomRight.x, bottomRight.y, (color.r/255.0f), (color.g/255.0f), (color.b/255.0f), (color.a/255.0f),
+            normalTL.x, normalTL.y, (color.r/255.0f), (color.g/255.0f), (color.b/255.0f), (color.a/255.0f),
+            normalTL.x, normalBR.y, (color.r/255.0f), (color.g/255.0f), (color.b/255.0f), (color.a/255.0f),
+            normalBR.x, normalTL.y, (color.r/255.0f), (color.g/255.0f), (color.b/255.0f), (color.a/255.0f),
+            normalBR.x, normalBR.y, (color.r/255.0f), (color.g/255.0f), (color.b/255.0f), (color.a/255.0f),
         };
         if(this->vaos.at((std::size_t)RenderType::Primitive) == nullptr){
             this->vaos.at((std::size_t)RenderType::Primitive) = new Vao;

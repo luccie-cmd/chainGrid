@@ -8,7 +8,6 @@ namespace chainGrid::ui{
     class Text : public Element{
         public:
             Text(glm::u64vec2 pos, std::string text, rendering::Renderer* renderer);
-            ~Text();
             void render() override;
         private:
             glm::u64vec2 _pos;

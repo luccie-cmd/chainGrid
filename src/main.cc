@@ -6,6 +6,7 @@
 #include <rendering/renderer.h>
 #include <thirdparty/toml.hpp>
 #include <ui/text.h>
+#include <ui/button.h>
 #include <csignal>
 #include <execinfo.h>
 #include <rendering/opengl/renderer.h>
@@ -32,7 +33,7 @@ void render(){
 #endif
         for(size_t y = 1; y < GRID_HEIGHT-2; ++y){
             for(size_t x = 1; x < GRID_WIDTH-2; ++x){
-                renderer->renderQuad(chainGrid::normalizeCoordinates(chainGrid::convertFromGridToScreen(glm::u64vec2(x, y))), chainGrid::normalizeCoordinates(chainGrid::convertFromGridToScreen(glm::u64vec2(x+1, y+1))), glm::u8vec4(50));
+                renderer->renderQuad(chainGrid::convertFromGridToScreen(glm::u64vec2(x, y)), chainGrid::convertFromGridToScreen(glm::u64vec2(x+1, y+1)), glm::u8vec4(50));
             }
         }
 #ifdef OPENGL_RENDERER
@@ -77,7 +78,8 @@ void loadLevel(unsigned int level){
     renderType = RenderType::Level;
 }
 
-void titleScreenButtonHandler(){
+void titleScreenButtonHandler(va_list args){
+    (void)args;
     entities.clear();
     uiElements.clear();
     renderType = RenderType::LevelSelect;
@@ -87,6 +89,7 @@ void loadTitleScreen(){
     entities.clear();
     uiElements.clear();
     uiElements.push_back(new chainGrid::ui::Text(glm::u64vec2((chainGrid::getScreenCoords().x/2)-(chainGrid::getScreenCoords().x/9), 100), "Chaingrid", renderer));
+    uiElements.push_back(new chainGrid::ui::Button(glm::u64vec2((chainGrid::getScreenCoords().x/2)-100, chainGrid::getScreenCoords().y/2), glm::u16vec2(200, 50), glm::u8vec4(0), glm::u8vec4(0, 0, 0, 255), "Start", renderer, titleScreenButtonHandler));
     renderType = RenderType::TitleScreen;
 }
 
@@ -112,8 +115,8 @@ void init(){
         std::exit(1);
     }
     renderer->init(window);
-    loadTitleScreen();
-    // loadLevel(0);
+    // loadTitleScreen();
+    loadLevel(0);
 }
 
 void quitHandler(int sig){

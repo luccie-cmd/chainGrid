@@ -334,10 +334,11 @@ def checkDeps():
         print("mesa needed")
 
     # TODO: Distro specific
-    command = "sudo pacman -Syu"
-    for dep in neededDeps:
-        command += f" {dep}"
-    callCmd(command, True)
+    if len(neededDeps) > 0:
+        command = "sudo pacman -Syu"
+        for dep in neededDeps:
+            command += f" {dep}"
+        callCmd(command, True)
 
 def main():
     checkDeps()

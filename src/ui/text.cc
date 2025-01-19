@@ -6,7 +6,6 @@ namespace chainGrid::ui{
         this->_pos = pos;
         this->_text = text;
     }
-    Text::~Text(){}
     void Text::render(){
         this->__renderer->renderText(this->_pos, glm::u8vec4(255), this->_text);
     }

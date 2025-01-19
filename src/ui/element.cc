@@ -5,5 +5,4 @@ namespace chainGrid::ui{
         this->__type = type;
         this->__renderer = renderer;
     }
-    Element::~Element(){}
 };

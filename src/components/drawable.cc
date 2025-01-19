@@ -22,7 +22,7 @@ namespace chainGrid::components{
         glm::vec2 bottomRight = (glm::vec2(this->transform->getPos())*this->transform->getScale())+(glm::vec2(this->transform->getSize())*this->transform->getScale());
         switch(polyType){
             case rendering::RenderType::Primitive: {
-                renderer->renderQuad(normalizeCoordinates(topLeft), normalizeCoordinates(bottomRight), this->color);
+                renderer->renderQuad(topLeft, bottomRight, this->color);
             } break;
             case rendering::RenderType::None:
             default: {

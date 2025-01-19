@@ -1,5 +1,6 @@
 #include <components/collision2d.h>
 #include <algorithm>
+#include <common.h>
 
 namespace chainGrid::components{
     Collision2D::Collision2D() :Component(ComponentType::Collision2D){
@@ -24,8 +25,9 @@ namespace chainGrid::components{
     }
     void Collision2D::update(std::vector<entities::Entity*> entities){
         for(entities::Entity* entity : entities){
+            Transform* entityTransform = reinterpret_cast<Transform*>(entity->getComponent(ComponentType::Transform));
             if(entity->hasComponent(ComponentType::Collision2D) && 
-                reinterpret_cast<Transform*>(entity->getComponent(ComponentType::Transform))->getPos() == this->transform->getPos() && 
+                AABBu64vec2(entityTransform->getPos(), entityTransform->getSize(), this->transform->getPos(), this->transform->getSize()) && 
                 std::find(this->ignoredTypes.begin(), this->ignoredTypes.end(), entity->getType()) == this->ignoredTypes.end()
             ){
                 if(this->onCollision){

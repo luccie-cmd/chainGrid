@@ -13,14 +13,8 @@ namespace chainGrid::rendering{
         union {
 #if defined(OPENGL_RENDERER)
             uint32_t textureID;
-#elif defined(VULKAN_RENDERER)
-            struct {
-                VkImage image;
-                VkImageView imageView;
-                VkSampler sampler;
-            } vulkanTexture;
 #else
-#error "No rendering backend specified"
+#error "No or invalid rendering backend specified"
 #endif
         };
         glm::u32vec2 size;
@@ -34,7 +28,7 @@ namespace chainGrid::rendering{
             virtual void shutDown() = 0;
             virtual void beginDraw() = 0;
             virtual void endDraw() = 0;
-            virtual void renderQuad(glm::vec2 topLeft, glm::vec2 bottomRight, glm::u8vec4 color) = 0;
+            virtual void renderQuad(glm::u64vec2 topLeft, glm::u64vec2 bottomRight, glm::u8vec4 color) = 0;
             virtual void renderText(glm::u64vec2 topLeft, glm::u8vec4 color, std::string text) = 0;
         protected:
             virtual Character* loadChar(FT_Face face) = 0;

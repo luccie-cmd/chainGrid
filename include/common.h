@@ -20,6 +20,7 @@ namespace chainGrid{
     glm::u16vec2 getScreenCoords();
     glm::mat4 getMP(components::Transform* transform);
     std::string readfile(std::string path);
+    bool AABBu64vec2(glm::u64vec2 aPos, glm::u16vec2 aSize, glm::u64vec2 bPos, glm::u16vec2 bSize);
 };
 
 #endif // _CHAINGRID_COMMON_H_

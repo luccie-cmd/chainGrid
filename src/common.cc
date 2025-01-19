@@ -47,4 +47,13 @@ namespace chainGrid{
         glm::u64vec2 ret = gridBlock+offset+glm::u64vec2(GRID_LINE_SIZE*grid.x, GRID_LINE_SIZE*grid.y);
         return ret;
     }
+    bool AABBu64vec2(glm::u64vec2 aPos, glm::u16vec2 aSize, glm::u64vec2 bPos, glm::u16vec2 bSize){
+        glm::u64vec2 aMin = aPos;
+        glm::u64vec2 aMax = aPos + glm::u64vec2(aSize.x, aSize.y);
+        glm::u64vec2 bMin = bPos;
+        glm::u64vec2 bMax = bPos + glm::u64vec2(bSize.x, bSize.y);
+        bool overlapX = (aMin.x < bMax.x) && (aMax.x > bMin.x);
+        bool overlapY = (aMin.y < bMax.y) && (aMax.y > bMin.y);
+        return overlapX && overlapY;
+    }
 };
